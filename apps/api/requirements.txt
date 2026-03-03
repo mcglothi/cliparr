@@ -5,3 +5,4 @@ psycopg[binary]==3.2.6
 redis==5.2.1
 pydantic-settings==2.8.1
 cryptography==44.0.2
+croniter==6.0.0

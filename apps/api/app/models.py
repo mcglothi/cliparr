@@ -13,6 +13,16 @@ class StoreAccount(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
+class Schedule(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    account_id: int = Field(index=True)
+    cron: str
+    timezone: str = "America/New_York"
+    enabled: bool = True
+    last_enqueued_at: datetime | None = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
 class JobRun(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     store_key: str = Field(index=True)
