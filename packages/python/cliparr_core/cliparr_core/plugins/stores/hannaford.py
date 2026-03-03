@@ -22,6 +22,13 @@ class HannafordPlugin(StorePlugin):
 
     async def navigate_to_coupons(self, page) -> None:
         await page.goto("https://www.hannaford.com/coupons", wait_until="networkidle")
+        title = (await page.title()).lower()
+        body_text = (await page.locator("body").inner_text()).lower()
+        if "site temporarily down" in title or "error code: 1020" in body_text:
+            raise RuntimeError(
+                "Hannaford blocked this run (Cloudflare 1020 / site temporarily down) from current network."
+            )
+
         ok_button = page.get_by_role("button", name="Ok, got it!")
         if await ok_button.count() > 0:
             await ok_button.first.click()
@@ -43,6 +50,10 @@ class HannafordPlugin(StorePlugin):
 
         targets = page.locator(".clipTarget")
         count = await targets.count()
+        if count == 0:
+            raise RuntimeError(
+                "No clip targets found. If coupons exist in browser, this runtime may be blocked by anti-bot or network filtering."
+            )
         for idx in range(count):
             try:
                 await targets.nth(idx).click(timeout=4000)
