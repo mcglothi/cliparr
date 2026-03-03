@@ -31,6 +31,13 @@ async def run_store_job(store_key: str, credentials: dict) -> dict:
                 "clipped_count": result.clipped_count,
                 "message": result.message,
             }
+        except Exception as exc:
+            return {
+                "status": "error",
+                "store_key": store_key,
+                "clipped_count": 0,
+                "message": f"{type(exc).__name__}: {exc}",
+            }
         finally:
             await browser.close()
 

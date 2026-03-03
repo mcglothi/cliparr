@@ -73,6 +73,7 @@ export default function Home() {
   const [insights, setInsights] = useState<Insights>(defaultInsights);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
 
   const [accountForm, setAccountForm] = useState({
     store_key: "",
@@ -117,6 +118,13 @@ export default function Home() {
 
   useEffect(() => {
     refreshAll();
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      refreshAll();
+    }, 15000);
+    return () => clearInterval(timer);
   }, []);
 
   async function onCreateAccount(e: FormEvent) {
@@ -212,7 +220,11 @@ export default function Home() {
         method: "POST",
         body: JSON.stringify({ account_id: accountId }),
       });
+      setNotice("Run queued. It can take up to 2 minutes for results to appear.");
       await refreshAll();
+      setTimeout(() => refreshAll(), 15000);
+      setTimeout(() => refreshAll(), 45000);
+      setTimeout(() => refreshAll(), 90000);
     } finally {
       setBusy(false);
     }
@@ -227,6 +239,7 @@ export default function Home() {
       </section>
 
       {error ? <p className="error">{error}</p> : null}
+      {notice ? <p className="notice">{notice}</p> : null}
 
       <section className="stats-grid">
         <article className="stat-card"><h3>Coupons Clipped</h3><p>{insights.total_clipped}</p></article>

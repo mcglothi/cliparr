@@ -44,6 +44,7 @@ body {
 
 .sub { color: var(--muted); max-width: 760px; }
 .error { color: #ffd5dc; }
+.notice { color: #9df4d6; }
 
 .stats-grid {
   margin-top: 22px;
