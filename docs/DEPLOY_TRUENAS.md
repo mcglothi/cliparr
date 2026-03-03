@@ -2,6 +2,7 @@
 
 This repo includes playbooks to integrate Cliparr with your existing stack:
 
+- Dockge stack deployment on TrueNAS
 - Pi-hole local DNS
 - Nginx Proxy Manager HTTPS proxy host
 - Wildcard certificate attachment
@@ -22,4 +23,4 @@ ansible-playbook -i ops/ansible/inventory.ini ops/ansible/configure_cliparr_prox
 
 ## Result
 
-`https://cliparr.home.timmcg.net` routes to Cliparr web service.
+`https://cliparr.home.timmcg.net` routes to Cliparr web service running in a Dockge-managed stack on TrueNAS.

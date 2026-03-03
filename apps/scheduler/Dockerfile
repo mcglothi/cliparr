@@ -12,4 +12,6 @@ RUN pip install --no-cache-dir -r /app/apps/scheduler/requirements.txt
 RUN useradd -m -u 10001 cliparr
 USER cliparr
 
+WORKDIR /app/apps/scheduler
+
 CMD ["python", "-m", "app.main"]

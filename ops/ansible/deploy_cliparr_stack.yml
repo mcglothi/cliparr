@@ -1,41 +1,42 @@
 ---
-- name: Deploy Cliparr stack on turing
-  hosts: turing
+- name: Deploy Cliparr Dockge stack on TrueNAS
+  hosts: truenas
   become: yes
   vars:
-    app_root: /opt/cliparr
+    dockge_stacks_dir: /mnt/.ix-apps/app_mounts/dockge/stacks
+    stack_name: cliparr
+    stack_dir: "{{ dockge_stacks_dir }}/{{ stack_name }}"
+    local_repo_root: "{{ lookup('env', 'CLIPARR_REPO_ROOT') | default('/Users/mcglothi/Code/cliparr', true) }}"
   tasks:
-    - name: Ensure dependencies are present
-      apt:
-        name:
-          - docker.io
-          - docker-compose-plugin
-          - git
-        state: present
-        update_cache: yes
-
-    - name: Ensure app root exists
+    - name: Ensure stack directory exists
       file:
-        path: "{{ app_root }}"
+        path: "{{ stack_dir }}"
         state: directory
         mode: "0755"
 
-    - name: Sync repository files
+    - name: Sync Cliparr repository into Dockge stack dir
       synchronize:
-        src: "{{ playbook_dir }}/../.."
-        dest: "{{ app_root }}"
+        src: "{{ local_repo_root }}/"
+        dest: "{{ stack_dir }}"
         rsync_opts:
           - "--exclude=.git"
           - "--exclude=node_modules"
 
     - name: Ensure env exists from example
       copy:
-        src: "{{ app_root }}/.env.example"
-        dest: "{{ app_root }}/.env"
+        src: "{{ stack_dir }}/.env.example"
+        dest: "{{ stack_dir }}/.env"
         remote_src: true
         force: no
 
-    - name: Start stack
-      command: docker compose -f {{ app_root }}/ops/compose/docker-compose.yml up -d --build
+    - name: Copy TrueNAS compose as Dockge stack compose.yaml
+      copy:
+        src: "{{ stack_dir }}/ops/compose/docker-compose.truenas.yaml"
+        dest: "{{ stack_dir }}/compose.yaml"
+        remote_src: true
+        force: true
+
+    - name: Build and start Cliparr stack
+      shell: cd {{ stack_dir }} && docker compose pull && docker compose up -d --build
       args:
-        chdir: "{{ app_root }}"
+        chdir: "{{ stack_dir }}"

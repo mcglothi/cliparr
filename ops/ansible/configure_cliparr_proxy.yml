@@ -5,8 +5,8 @@
   gather_facts: no
   vars:
     npm_api: "http://10.10.10.10:30020/api"
-    cliparr_upstream_ip: "10.10.10.50"
-    cliparr_upstream_port: 3000
+    cliparr_upstream_ip: "10.10.10.10"
+    cliparr_upstream_port: 3300
     cliparr_domain: "cliparr.home.timmcg.net"
     cert_id: 1
 

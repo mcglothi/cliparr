@@ -16,4 +16,6 @@ RUN pip install --no-cache-dir -e /app/packages/python/cliparr_core \
 RUN useradd -m -u 10001 cliparr
 USER cliparr
 
+WORKDIR /app/apps/api
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
