@@ -1,0 +1,41 @@
+---
+- name: Deploy Cliparr stack on turing
+  hosts: turing
+  become: yes
+  vars:
+    app_root: /opt/cliparr
+  tasks:
+    - name: Ensure dependencies are present
+      apt:
+        name:
+          - docker.io
+          - docker-compose-plugin
+          - git
+        state: present
+        update_cache: yes
+
+    - name: Ensure app root exists
+      file:
+        path: "{{ app_root }}"
+        state: directory
+        mode: "0755"
+
+    - name: Sync repository files
+      synchronize:
+        src: "{{ playbook_dir }}/../.."
+        dest: "{{ app_root }}"
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=node_modules"
+
+    - name: Ensure env exists from example
+      copy:
+        src: "{{ app_root }}/.env.example"
+        dest: "{{ app_root }}/.env"
+        remote_src: true
+        force: no
+
+    - name: Start stack
+      command: docker compose -f {{ app_root }}/ops/compose/docker-compose.yml up -d --build
+      args:
+        chdir: "{{ app_root }}"

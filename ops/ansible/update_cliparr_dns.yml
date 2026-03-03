@@ -1,0 +1,87 @@
+---
+- name: Add cliparr DNS entries to primary Pi-hole
+  hosts: truenas
+  become: yes
+  vars:
+    new_hosts:
+      - '"10.10.10.10 cliparr.home.timmcg.net"'
+
+  tasks:
+    - name: Read current DNS hosts from pihole.toml
+      shell: |
+        python3 -c "
+        import re, json
+        with open('/mnt/.ix-apps/app_mounts/pihole/config/pihole.toml') as f:
+            content = f.read()
+        m = re.search(r'hosts\s*=\s*\[(.*?)\]', content, re.DOTALL)
+        if m:
+            entries = [l.strip().rstrip(',') for l in m.group(1).splitlines() if '\"' in l]
+            print(json.dumps(entries))
+        else:
+            print('[]')
+        "
+      register: current_hosts_json
+      changed_when: false
+
+    - name: Build merged hosts list
+      set_fact:
+        merged_hosts: "{{ (current_hosts_json.stdout | from_json) | union(new_hosts) | list }}"
+
+    - name: Write merged hosts back to pihole.toml
+      shell: |
+        python3 << 'PYEOF'
+        import re
+
+        new_hosts = {{ merged_hosts | to_json }}
+
+        with open('/mnt/.ix-apps/app_mounts/pihole/config/pihole.toml') as f:
+            content = f.read()
+
+        entries = ',\n    '.join(new_hosts)
+        new_block = 'hosts = [\n    ' + entries + '\n  ]'
+        updated = re.sub(r'hosts\s*=\s*\[.*?\]', new_block, content, count=1, flags=re.DOTALL)
+
+        with open('/mnt/.ix-apps/app_mounts/pihole/config/pihole.toml', 'w') as f:
+            f.write(updated)
+
+        print(f'Wrote {len(new_hosts)} DNS entries')
+        PYEOF
+      register: pihole_write
+      changed_when: "'Wrote' in pihole_write.stdout"
+
+    - name: Reload Pi-hole DNS
+      shell: docker exec ix-pihole-pihole-1 pihole reloaddns
+      when: pihole_write.changed
+
+- name: Sync updated DNS hosts to secondary Pi-hole
+  hosts: pihole2
+  become: yes
+  vars:
+    primary_hosts: "{{ hostvars['truenas']['merged_hosts'] }}"
+
+  tasks:
+    - name: Sync hosts to secondary pihole.toml
+      shell: |
+        python3 << 'PYEOF'
+        import re
+
+        hosts = {{ primary_hosts | to_json }}
+
+        with open('/etc/pihole/pihole.toml') as f:
+            content = f.read()
+
+        entries = ',\n    '.join(hosts)
+        new_block = 'hosts = [\n    ' + entries + '\n  ]'
+        updated = re.sub(r'hosts\s*=\s*\[.*?\]', new_block, content, count=1, flags=re.DOTALL)
+
+        with open('/etc/pihole/pihole.toml', 'w') as f:
+            f.write(updated)
+
+        print(f'Synced {len(hosts)} DNS entries')
+        PYEOF
+      register: sync_result
+      changed_when: "'Synced' in sync_result.stdout"
+
+    - name: Reload secondary Pi-hole DNS
+      command: pihole reloaddns
+      when: sync_result.changed

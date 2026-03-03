@@ -1,0 +1,7 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.0
+sqlmodel==0.0.24
+psycopg[binary]==3.2.6
+redis==5.2.1
+pydantic-settings==2.8.1
+cryptography==44.0.2

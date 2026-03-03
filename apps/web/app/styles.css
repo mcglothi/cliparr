@@ -1,0 +1,58 @@
+:root {
+  --bg-1: #0b111a;
+  --bg-2: #101d2e;
+  --text: #f3f5f7;
+  --muted: #b9c5d2;
+  --brand: #3dd9a4;
+  --card: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background: radial-gradient(1200px 500px at 85% -10%, #1e3a5f 0%, transparent 70%),
+              linear-gradient(160deg, var(--bg-1), var(--bg-2));
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+}
+
+.shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 48px 20px 64px;
+}
+
+.hero h1 {
+  margin: 8px 0 10px;
+  line-height: 1.1;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+}
+
+.kicker {
+  color: var(--brand);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sub { color: var(--muted); max-width: 720px; }
+
+.grid {
+  margin-top: 28px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  backdrop-filter: blur(6px);
+}
+
+li { margin: 6px 0; }

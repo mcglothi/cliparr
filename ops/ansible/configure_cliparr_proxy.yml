@@ -1,0 +1,90 @@
+---
+- name: Configure NPM proxy host for Cliparr
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    npm_api: "http://10.10.10.10:30020/api"
+    cliparr_upstream_ip: "10.10.10.50"
+    cliparr_upstream_port: 3000
+    cliparr_domain: "cliparr.home.timmcg.net"
+    cert_id: 1
+
+  tasks:
+    - name: Authenticate with NPM API
+      uri:
+        url: "{{ npm_api }}/tokens"
+        method: POST
+        body_format: json
+        body:
+          identity: "{{ vault_npm_user }}"
+          secret: "{{ vault_npm_password }}"
+        status_code: 200
+      register: npm_auth
+
+    - name: Get existing proxy hosts
+      uri:
+        url: "{{ npm_api }}/nginx/proxy-hosts"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ npm_auth.json.token }}"
+        status_code: 200
+      register: existing_hosts
+
+    - name: Create proxy host if missing
+      uri:
+        url: "{{ npm_api }}/nginx/proxy-hosts"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ npm_auth.json.token }}"
+          Content-Type: application/json
+        body_format: json
+        body:
+          domain_names:
+            - "{{ cliparr_domain }}"
+          forward_scheme: "http"
+          forward_host: "{{ cliparr_upstream_ip }}"
+          forward_port: "{{ cliparr_upstream_port }}"
+          certificate_id: "{{ cert_id }}"
+          ssl_forced: 1
+          allow_websocket_upgrade: 1
+          block_exploits: 1
+          caching_enabled: 0
+          http2_support: 1
+          access_list_id: 0
+          locations: []
+          advanced_config: ""
+          meta:
+            nginx_online: true
+            nginx_err: null
+        status_code: 201
+      when: (existing_hosts.json | selectattr('domain_names', 'contains', cliparr_domain) | list | length) == 0
+
+    - name: Update existing proxy host
+      uri:
+        url: "{{ npm_api }}/nginx/proxy-hosts/{{ (existing_hosts.json | selectattr('domain_names', 'contains', cliparr_domain) | map(attribute='id') | first) }}"
+        method: PUT
+        headers:
+          Authorization: "Bearer {{ npm_auth.json.token }}"
+          Content-Type: application/json
+        body_format: json
+        body:
+          domain_names:
+            - "{{ cliparr_domain }}"
+          forward_scheme: "http"
+          forward_host: "{{ cliparr_upstream_ip }}"
+          forward_port: "{{ cliparr_upstream_port }}"
+          certificate_id: "{{ cert_id }}"
+          ssl_forced: 1
+          allow_websocket_upgrade: 1
+          block_exploits: 1
+          caching_enabled: 0
+          http2_support: 1
+          access_list_id: 0
+          locations: []
+          advanced_config: ""
+          meta:
+            nginx_online: true
+            nginx_err: null
+        status_code: 200
+      when: (existing_hosts.json | selectattr('domain_names', 'contains', cliparr_domain) | list | length) > 0

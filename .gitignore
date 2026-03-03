@@ -1,0 +1,26 @@
+# env
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.mypy_cache/
+
+# node
+node_modules/
+.next/
+dist/
+
+# logs and runtime
+*.log
+artifacts/
+playwright-report/
+
+# os/editor
+.DS_Store
+.vscode/
+.idea/
