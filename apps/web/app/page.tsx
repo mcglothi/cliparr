@@ -351,6 +351,7 @@ export default function Home() {
               <span>{run.store_key}</span>
               <span>{run.clipped_count} clipped</span>
               <span className="muted">{new Date(run.started_at).toLocaleString()}</span>
+              <span className="muted message">{run.message || "-"}</span>
             </div>
           ))}
           {!recentRuns.length ? <p className="muted">No runs yet.</p> : null}
