@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Cliparr",
+  "version": "0.1.0",
+  "description": "One-click coupon clipping across supported stores.",
+  "action": {
+    "default_title": "Cliparr",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs",
+    "scripting",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://*.hannaford.com/*",
+    "https://*.homedepot.com/*",
+    "https://*.lowes.com/*",
+    "https://*.marketbasketfoods.com/*",
+    "https://*.shaws.com/*",
+    "https://*.amazon.com/*",
+    "https://*.walmart.com/*",
+    "https://*.target.com/*",
+    "https://*.cvs.com/*",
+    "https://*.walgreens.com/*",
+    "https://*.oreillyauto.com/*",
+    "https://*.autozone.com/*",
+    "https://*.starbucks.com/*"
+  ],
+  "options_page": "options.html"
+}

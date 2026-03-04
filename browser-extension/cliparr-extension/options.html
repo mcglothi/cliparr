@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cliparr Settings</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header class="settings-header">
+        <div>
+          <p class="eyebrow">Cliparr</p>
+          <h1>Extension Settings</h1>
+        </div>
+        <p class="subtext">Use your normal store logins in browser tabs. Cliparr runs actions against those active sessions.</p>
+      </header>
+
+      <section class="card">
+        <h2>Schedule</h2>
+        <label for="scheduleMode">Mode</label>
+        <select id="scheduleMode">
+          <option value="manual">Manual only</option>
+          <option value="daily">Daily</option>
+        </select>
+
+        <label for="scheduleHour">Daily run hour (local)</label>
+        <input id="scheduleHour" type="number" min="0" max="23" />
+
+        <label class="checkbox-row">
+          <input id="closeTabsAfterRun" type="checkbox" />
+          <span>Close tabs after run completes</span>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Stores</h2>
+        <p class="subtext">Enable stores you want included in one-click runs. Hannaford and Shaw's automation are implemented.</p>
+        <div id="storesContainer" class="store-settings"></div>
+      </section>
+
+      <section class="card">
+        <h2>Save</h2>
+        <button id="saveBtn" class="primary">Save settings</button>
+        <p id="saveStatus">No changes yet.</p>
+      </section>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

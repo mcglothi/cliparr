@@ -9,7 +9,7 @@
 
 ## v0.2
 
-- Shaws plugin
+- Shaw's extension completion reliability
 - Per-account scheduling
 - Failure screenshots in UI
 - Slack/Discord notifications

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cliparr</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="popup">
+    <main class="panel">
+      <header class="panel-header">
+        <div>
+          <p class="eyebrow">Cliparr</p>
+          <h1>Coupon Command Deck</h1>
+        </div>
+        <button id="openOptions" class="ghost">Settings</button>
+      </header>
+
+      <section class="stats">
+        <article>
+          <p>Total Runs</p>
+          <h2 id="totalRuns">0</h2>
+        </article>
+        <article>
+          <p>Total Clipped</p>
+          <h2 id="totalClipped">0</h2>
+        </article>
+      </section>
+
+      <section class="actions">
+        <button id="runNow" class="primary">Clip Enabled Stores</button>
+        <p id="statusLine">Ready.</p>
+      </section>
+
+      <section id="checkpointPanel" class="checkpoint hidden">
+        <div class="checkpoint-title">Human Checkpoint</div>
+        <p id="checkpointText">Verification required.</p>
+        <div class="checkpoint-actions">
+          <button id="openCheckpoint" class="small">Open Challenge Tab</button>
+          <button id="resumeCheckpoint" class="primary small">Resume</button>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">
+          <h3>Stores</h3>
+          <span id="enabledCount">0 enabled</span>
+        </div>
+        <div id="storeList" class="store-list"></div>
+      </section>
+
+      <section class="details">
+        <div class="section-title">
+          <h3>Last Run Details</h3>
+          <span id="detailsAt">-</span>
+        </div>
+        <pre id="detailsText">No run details yet.</pre>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

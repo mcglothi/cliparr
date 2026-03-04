@@ -50,9 +50,17 @@ Use the included Ansible playbooks in `ops/ansible` to:
 
 ## Store support status (MVP)
 
-- Hannaford: starter plugin scaffold included
-- Shaws: planned
+- Hannaford: extension automation working (with checkpoint flow)
+- Shaws: extension automation in active tuning (partial success)
 - Other stores: plugin request workflow in docs
+
+## Browser extension MVP
+
+For anti-bot protected stores, run Cliparr in your normal browser session via the MV3 extension:
+
+- Source: `browser-extension/cliparr-extension`
+- Install/use guide: `browser-extension/cliparr-extension/README.md`
+- Current status / handoff: `docs/HANDOFF.md`
 
 ## Contributing
 
