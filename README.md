@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/hero-graphic.png" alt="Cliparr" width="1000" />
+</p>
+
 # Cliparr
 
 **Cliparr: automated coupon clipping across stores.**
